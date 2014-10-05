@@ -1,0 +1,12 @@
+Revision history for Perl module Module::Loader
+
+0.01 2014-10-05 NEILB
+    - Plugin::Loader renamed to Module::Loader. Writing the doc and then
+      starting a blog post about it make me realise that Module::Loader
+      would be a much more appropriate name. Thanks to BRADH for giving
+      me the Module::Loader name.
+    - Tests were failing on win32. Needed to change
+            use lib 't/lib';
+      To a more OS-portable version. It was adding the directory ok, but
+      the regexp to strip the head of the path wasn't working.
+

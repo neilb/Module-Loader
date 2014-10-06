@@ -1,5 +1,8 @@
 Revision history for Perl module Module::Loader
 
+0.02 2014-10-06 NEILB
+    - Added a search() method, for full compatibility with Mojo::Loader.
+
 0.01 2014-10-05 NEILB
     - Plugin::Loader renamed to Module::Loader. Writing the doc and then
       starting a blog post about it make me realise that Module::Loader

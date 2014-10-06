@@ -6,7 +6,7 @@ use Path::Iterator::Rule;
 use File::Spec::Functions   qw/ catfile splitdir /;
 use Carp                    qw/ croak /;
 
-has 'max_depth' => (is => 'rw');
+has 'max_depth' => (is => 'rw', clearer => 1);
 
 sub find_modules
 {
@@ -33,6 +33,25 @@ sub find_modules
     }
 
     return keys(%modules);
+}
+
+sub search
+{
+    my $self      = shift;
+    my $max_depth = $self->max_depth;
+
+    $self->max_depth(1);
+
+    my @modules   =  $self->find_modules(@_);
+
+    if (defined $max_depth) {
+        $self->max_depth($max_depth);
+    }
+    else {
+        $self->clear_max_depth();
+    }
+
+    return @modules;
 }
 
 sub load
@@ -108,6 +127,17 @@ that were found in C<@INC>. For example:
 
 By default this will find all modules in the given namespace,
 unless you've specified a maximum search depth, as described above.
+
+=head2 search
+
+This is the same as C<find_modules()> above, but it hard-codes the search depth
+to 1. This method is provided for compatibility with M<Mojo::Loader>:
+
+ @plugins = $loader->search('Template::Plugin');
+
+It preserves your current setting of the C<max_depth> attribute,
+in the unlikely event that you want to interleave calls to C<find_modules()>
+and C<search()>.
 
 =head2 load
 

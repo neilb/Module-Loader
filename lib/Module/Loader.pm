@@ -102,10 +102,12 @@ just to get a module loader, which prompted me to create C<Module::Loader>.
 Note: this module was initially called C<Plugin::Loader>, but I realised
 that C<Module::Loader> was a more appropriate name.
 
-=head2 max_depth
+=head2 new
 
 When instantiating C<Module::Loader>, you can optionally set the
 C<max_depth> attribute, which limits the search depth when looking for modules.
+
+ my $loader  = Module::Loader->new(max_depth => 1);
 
 Let's say you have all of the CPAN plugins for the template toolkit
 installed locally. If you don't specify C<max_depth>, then C<find_modules('Template::Plugin')>
@@ -151,7 +153,15 @@ as shown above.
 =head2 load
 
 Takes a module name and tries to load the module.
+
+ $loader->load('MyModule::Plugin::Spank');
+
 If loading fails, then we C<croak>.
+
+=head2 max_depth
+
+Returns the value of the C<max_depth>, if it was passed to the constructor,
+otherwise C<undef>.
 
 =head1 SEE ALSO
 

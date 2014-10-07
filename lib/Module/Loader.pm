@@ -1,12 +1,25 @@
 package Module::Loader;
 
 use 5.006;
-use Moo;
+use strict;
+use warnings;
 use Path::Iterator::Rule;
 use File::Spec::Functions   qw/ catfile splitdir /;
 use Carp                    qw/ croak /;
 
-has 'max_depth' => (is => 'rw');
+sub new
+{
+    my ( $class, @args ) = @_;
+    return bless { ( 1 == @args and ref $args[0] ) ? ( %{$args[0]} ) : ( @args ) }, $class;
+}
+
+sub max_depth
+{
+    my ( $self, @args ) = @_;
+    croak 'max_depth is immutable' if @args;
+    return $self->{max_depth} if exists $self->{max_depth};
+    return;
+}
 
 sub find_modules
 {

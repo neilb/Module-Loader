@@ -1,16 +1,34 @@
 package Module::Loader;
 
 use 5.006;
-use Moo;
+use strict;
+use warnings;
 use Path::Iterator::Rule;
 use File::Spec::Functions   qw/ catfile splitdir /;
 use Carp                    qw/ croak /;
 
-has 'max_depth' => (is => 'rw', clearer => 1);
+sub new
+{
+    my ($class, %attributes) = @_;
+
+    bless {%attributes}, $class;
+}
+
+sub max_depth
+{
+    my $self = shift;
+
+    croak 'max_depth is immutable' if @_ > 0;
+    return $self->{max_depth} if exists($self->{max_depth});
+    return;
+}
 
 sub find_modules
 {
-    my ($self, $base) = @_;
+    my $self          = shift;
+    my $base          = shift;
+    my $argref        = @_ > 0 ? shift : {};
+    my $max_depth     = $argref->{max_depth} || $self->{max_depth} || 0;
     my @baseparts     = split(/::/, $base);
     my %modules;
 
@@ -19,7 +37,7 @@ sub find_modules
         next unless -d $path;
 
         my $rule = Path::Iterator::Rule->new->perl_module;
-        $rule->max_depth($self->max_depth) if $self->max_depth;
+        $rule->max_depth($max_depth) if $max_depth;
 
         foreach my $file ($rule->all($path)) {
             (my $modpath = $file) =~ s!^\Q$directory\E.|\.pm$!!g;
@@ -37,21 +55,9 @@ sub find_modules
 
 sub search
 {
-    my $self      = shift;
-    my $max_depth = $self->max_depth;
+    my ($self, $base) = @_;
 
-    $self->max_depth(1);
-
-    my @modules   =  $self->find_modules(@_);
-
-    if (defined $max_depth) {
-        $self->max_depth($max_depth);
-    }
-    else {
-        $self->clear_max_depth();
-    }
-
-    return @modules;
+    return $self->find_modules($base, { max_depth => 1 });
 }
 
 sub load
@@ -98,9 +104,8 @@ that C<Module::Loader> was a more appropriate name.
 
 =head2 max_depth
 
-C<Module::Loader> has an optional C<max_depth> attribute.
-If you set this to 1, then C<find_modules> will only report modules
-that are immediately within the namespace specified.
+When instantiating C<Module::Loader>, you can optionally set the
+C<max_depth> attribute, which limits the search depth when looking for modules.
 
 Let's say you have all of the CPAN plugins for the template toolkit
 installed locally. If you don't specify C<max_depth>, then C<find_modules('Template::Plugin')>
@@ -127,6 +132,10 @@ that were found in C<@INC>. For example:
 
 By default this will find all modules in the given namespace,
 unless you've specified a maximum search depth, as described above.
+You can also specify C<max_depth> when you call the method:
+
+ @plugins = $loader->find_modules('Template::Plugin',
+                                  { max_depth => 1 });
 
 =head2 search
 
@@ -136,9 +145,8 @@ This method is provided for compatibility with L<Mojo::Loader>:
 
  @plugins = $loader->search('Template::Plugin');
 
-It preserves your current setting of the C<max_depth> attribute,
-in the unlikely event that you want to interleave calls to C<find_modules()>
-and C<search()>.
+It just calls C<find_modules()> with C<max_depth> set to 1,
+as shown above.
 
 =head2 load
 

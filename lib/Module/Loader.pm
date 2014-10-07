@@ -130,8 +130,9 @@ unless you've specified a maximum search depth, as described above.
 
 =head2 search
 
-This is the same as C<find_modules()> above, but it hard-codes the search depth
-to 1. This method is provided for compatibility with M<Mojo::Loader>:
+This is the same as C<find_modules()> above,
+but it hard-codes the search depth to 1.
+This method is provided for compatibility with L<Mojo::Loader>:
 
  @plugins = $loader->search('Template::Plugin');
 

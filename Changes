@@ -1,5 +1,9 @@
 Revision history for Perl module Module::Loader
 
+0.03 2014-10-07 NEILB
+    - I was using my pod extension M<...> (from Text::Markdown::PerlExtensions)
+      instead of L<...>. Thanks to GRANTM and OALDERS for reporting this.
+
 0.02 2014-10-06 NEILB
     - Added a search() method, for full compatibility with Mojo::Loader.
 

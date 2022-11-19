@@ -33,10 +33,22 @@ sub find_modules
     my %modules;
 
     foreach my $directory (@INC) {
-        my $path = catfile($directory, @baseparts);
-        next unless -d $path;
+        my $path;
+        my $rule;
 
-        my $rule = Path::Iterator::Rule->new->perl_module;
+        if ( ref $directory && eval { $directory->can( 'files' ) } ) {
+            $path = catfile(@baseparts);
+            require Module::Loader::PIR::PathList;
+            $rule = Module::Loader::PIR::PathList->new($directory->files);
+            next unless $rule->clone->dir->all($path);
+        }
+        else {
+            $path = catfile($directory, @baseparts);
+            $rule = Path::Iterator::Rule->new;
+            next unless -d $path;
+        }
+
+        $rule->perl_module;
         $rule->max_depth($max_depth) if $max_depth;
 
         foreach my $file ($rule->all($path)) {

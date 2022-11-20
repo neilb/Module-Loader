@@ -90,13 +90,6 @@ sub _objectify {
         $ref = $ref->{$entry};
     }
 
-    my %obj = (
-        path   => $path,
-        exists => defined $ref && exists $ref->{$file} );
-    $obj{is_dir}   = $obj{exists} && defined $ref->{$file};
-    $obj{is_file}  = $obj{exists} && !defined $ref->{$file};
-    $obj{children} = $obj{is_dir} ? $ref->{$file} : {};
-
     return Module::Loader::PIR::PathList::Entry->new( $ref, $path, $file );
 }
 

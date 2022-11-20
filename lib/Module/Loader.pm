@@ -38,8 +38,8 @@ sub find_modules
 
         if ( ref $directory && eval { $directory->can( 'files' ) } ) {
             $path = catfile(@baseparts);
-            require Module::Loader::PIR::PathList;
-            $rule = Module::Loader::PIR::PathList->new($directory->files);
+            require Path::List::Rule;
+            $rule = Path::List::Rule->new([$directory->files]);
             next unless $rule->clone->dir->all($path);
         }
         else {

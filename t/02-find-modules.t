@@ -39,7 +39,7 @@ ok(!grep({ $_ eq 'Monkey::Plugin::Bonobo::Utilities' } @modules),
    "We should NOT find Monkey::Plugin::Bonobo::Utilities");
 
 ok(grep({ $_ eq 'Monkey::Plugin::Mandrill' } @modules),
-   "We should find Monkey::Plugin::Bonobo::Utilities");
+   "We should find Monkey::Plugin::Mandrill");
 
 @modules = $loader->find_modules('Monkey::Plugin');
 
@@ -50,7 +50,7 @@ ok(grep({ $_ eq 'Monkey::Plugin::Bonobo::Utilities' } @modules),
    "We should find Monkey::Plugin::Bonobo::Utilities");
 
 ok(grep({ $_ eq 'Monkey::Plugin::Mandrill' } @modules),
-   "We should find Monkey::Plugin::Bonobo::Utilities");
+   "We should find Monkey::Plugin::Mandrill");
 
 done_testing;
 
